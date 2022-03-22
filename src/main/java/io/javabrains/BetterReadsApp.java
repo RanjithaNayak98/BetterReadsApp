@@ -2,6 +2,8 @@ package io.javabrains;
 
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.cassandra.CqlSessionBuilderCustomizer;
@@ -17,8 +19,11 @@ import io.javabrains.connection.DataStaxAstraProperties;
 @SpringBootApplication
 @EnableConfigurationProperties(DataStaxAstraProperties.class)
 public class BetterReadsApp {
+	
+	Logger logger = LoggerFactory.getLogger(BetterReadsApp.class);
 
 	public static void main(String[] args) {
+		
 		SpringApplication.run(BetterReadsApp.class, args);
 	}
 
@@ -30,6 +35,7 @@ public class BetterReadsApp {
 	
 	@Bean
 	public CqlSessionBuilderCustomizer sessionBuilderCustomizer(DataStaxAstraProperties astraProperties) {
+		logger.trace("picking astra properties");
 		Path bundle = astraProperties.getSecureConnectBundle().toPath();
 		return builder -> builder.withCloudSecureConnectBundle(bundle);
 	}
